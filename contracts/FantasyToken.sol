@@ -13,10 +13,10 @@ contract FantasyToken is KIP7Mintable, KIP7Burnable, KIP7Pausable, KIP7Metadata 
   uint8 constant private _decimals = 18;
   uint256 constant private _initSupply = 4_000_000_000;
 
-  constructor(address _owner)
+  constructor(address _newOwner)
   KIP7Metadata(_name, _symbol, _decimals) public {
-    _mint(_owner, _initSupply * (10**uint256(_decimals)));
-    _addMinter(_owner);
+    _mint(_newOwner, _initSupply * (10**uint256(_decimals)));
+    _addMinter(_newOwner);
     _removeMinter(msg.sender);
   }
 }
