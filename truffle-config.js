@@ -14,7 +14,7 @@ module.exports = {
     baobab: {
       provider: () => { return new HDWalletProvider(process.env.TESTNET_DEPLOYER_PRIVATE_KEY, 'https://api.baobab.klaytn.net:8651') },
       network_id: 1001, //Klaytn baobab testnet's network id
-      gas: 8000000,
+      gas: 3000000,
       gasPrice: 25000000000
     },
     cypress: {
@@ -29,7 +29,7 @@ module.exports = {
         return new HDWalletProvider(process.env.MAINNET_DEPLOYER_PRIVATE_KEY, new Caver.providers.HttpProvider("https://node-api.klaytnapi.com/v1/klaytn", option))
       },
       network_id: 8217, //Klaytn mainnet's network id
-      gas: 8000000,
+      gas: 3000000,
       gasPrice: 25000000000
     }
   },
