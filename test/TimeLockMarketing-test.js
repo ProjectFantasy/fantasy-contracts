@@ -9,16 +9,18 @@ const { BN, time } = require('openzeppelin-test-helpers')
 
 contract('TimeLockMarketing', async function ([owner, beneficiary]) {
   let times1 = [1638316800]
+
   let times2 = [
+    1640995200,
+    1654041600,
     1672531200,
     1685577600,
     1704067200,
     1717200000,
     1735689600,
     1748736000,
-    1767225600,
-    1780272000,
   ]
+
   DECIMALS = web3.utils.toBN(10 ** 18)
   beforeEach(async function () {
     this.fanart = await Fanart.new()
@@ -58,8 +60,11 @@ contract('TimeLockMarketing', async function ([owner, beneficiary]) {
       )
     })
 
-    // #2
-    it('Should release term 2: 2250000 - from 1/1/2023 -  each 6 months', async function () {
+    // 1/1/2022 - 1/6/2022
+    // 1/1/2023 - 1/6/2023
+    // 1/1/2024 - 1/6/2024
+    // 1/1/2025 - 1/6/2025
+    it('Should release term 2: 2250000 - from 1/1/2022 -  each 6 months', async function () {
       await time.increaseTo(times2[0])
       await this.timeLock.release({ from: beneficiary })
       expect(await this.fanart.balanceOf(beneficiary)).to.be.bignumber.equal(
