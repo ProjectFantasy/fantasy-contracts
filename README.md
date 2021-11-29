@@ -20,9 +20,9 @@ $ npm install
 
 # To run test at local
 #
-$ ganache-cli
+$ ganache-cli -b 0
 $ # Run docker
-$ truffle test
+$ truffle test <file-path> // Please reset ganache-cli and run each file separately due to increase_Time_EVM problem
 
 # To deploy at local
 #
