@@ -4,7 +4,8 @@ pragma solidity 0.5.16;
 import "@klaytn/contracts/token/KIP7/IKIP7.sol";
 import "@klaytn/contracts/math/SafeMath.sol";
 
-contract TimeLockPrivateSell {
+// advisor
+contract TimeLockAdvisor2 {
   using SafeMath for uint256;
 
   address public beneficiary;
@@ -16,9 +17,9 @@ contract TimeLockPrivateSell {
     uint256 releaseTime;
   }
 
-  uint256 withdrawedAmount;
+  uint256 sentAmount;
   uint256 constant DECIMALS = 10 ** 18;
-  uint256 constant public initialTokensBalance = 6000000 * DECIMALS;
+  uint256 constant public initialTokensBalance = 2750000 * DECIMALS;
 
   Stage[] public stages;
 
@@ -42,18 +43,19 @@ contract TimeLockPrivateSell {
 
   function initStage() public onlyOwner {
     token.transferFrom(msg.sender, address(this), initialTokensBalance);
-    // Day 0: 01/12/2021 - 1,200,000 (20%)
-    // next 2 years, 1,200,000 each 6 months
+    // Day 0: 1,000,000
+    // 1/12/2021
+    stages.push(Stage(1000000 * DECIMALS, 1638316800));
+    // after 6 month: 800,000
+    // 1/6/2022
+    stages.push(Stage(950000 * DECIMALS, 1654041600));
+
+    // year 2: 400,000 each 6 months
+    // 1/1/2023 - 1/6/2023
     {
-      uint32[5] memory times = [
-        1638316800,
-        1654041600,
-        1669852800,
-        1685577600,
-        1701388800
-      ];
-      for (uint256 i = 0; i < 5; i++) {
-        stages.push(Stage(1200000 * DECIMALS, times[i]));
+      uint32[2] memory times = [1672531200, 1685577600];
+      for (uint256 i = 0; i < 2; i++) {
+        stages.push(Stage(400000 * DECIMALS, times[i]));
       }
     }
   }
@@ -71,12 +73,13 @@ contract TimeLockPrivateSell {
       }
     }
 
-    return availableAmount.sub(withdrawedAmount);
+    return availableAmount.sub(sentAmount);
   }
 
   function sendToken(uint256 _amount) internal {
-    withdrawedAmount = withdrawedAmount.add(_amount);
+    sentAmount = sentAmount.add(_amount);
     token.transfer(beneficiary, _amount);
+
     // emit event
     emit TokenSent(_amount, block.timestamp);
   }
