@@ -16,7 +16,7 @@ contract TimeLockMarketing {
     uint256 releaseTime;
   }
 
-  uint256 withdrawedAmount;
+  uint256 sentAmount;
   uint256 constant DECIMALS = 10 ** 18;
   uint256 constant public initialTokensBalance = 24000000 * DECIMALS;
 
@@ -81,11 +81,11 @@ contract TimeLockMarketing {
       }
     }
 
-    return availableAmount.sub(withdrawedAmount);
+    return availableAmount.sub(sentAmount);
   }
 
   function sendToken(uint256 _amount) internal {
-    withdrawedAmount = withdrawedAmount.add(_amount);
+    sentAmount = sentAmount.add(_amount);
     token.transfer(beneficiary, _amount);
 
     // emit event

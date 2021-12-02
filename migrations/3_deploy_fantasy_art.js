@@ -1,11 +1,12 @@
 const FANART = artifacts.require("FANART");
 
 const TimeLockAdvisor = artifacts.require("TimeLockAdvisor");
+const TimeLockAdvisor2 = artifacts.require("TimeLockAdvisor2");
+const TimeLockAdvisor3 = artifacts.require("TimeLockAdvisor3");
 const TimeLockCoreTeam = artifacts.require("TimeLockCoreTeam");
 const TimeLockMarketing = artifacts.require("TimeLockMarketing");
 const TimeLockSellBuy = artifacts.require("TimeLockSellBuy");
 const TimeLockStaking = artifacts.require("TimeLockStaking");
-const TimeLockPrivateSell = artifacts.require("TimeLockPrivateSell");
 
 const Ethers = require('ethers')
 
@@ -32,6 +33,26 @@ module.exports = async (deployer) => {
   console.log("TimeLockAdvisor initStage...........");
   await timeLockAdvisor.initStage()
 
+  console.log("Deploying TimeLockAdvisor2..............")
+  const advisorAddress2 = "0x93975C4c4d11B4aDee88A0549BD0e82152075aE6"
+  await deployer.deploy(TimeLockAdvisor2, advisorAddress2, fanArtAddress);
+  const timeLockAdvisor2 = await TimeLockAdvisor2.deployed()
+  console.log("TimeLockAdvisor2 deployed to: ", timeLockAdvisor2.address);  //===== DEPLOY advisor
+  console.log("TimeLockAdvisor approving...........");
+  await fanArtInstance.approve(timeLockAdvisor2.address, await timeLockAdvisor2.initialTokensBalance())
+  console.log("timeLockAdvisor2 initStage...........");
+  await timeLockAdvisor2.initStage()
+
+  console.log("Deploying TimeLockAdvisor3..............")
+  const advisorAddress3 = "0xCeB6aE2e53Af1EAdFF2d7324e1d06fAa10587755"
+  await deployer.deploy(TimeLockAdvisor3, advisorAddress3, fanArtAddress);
+  const timeLockAdvisor3 = await TimeLockAdvisor3.deployed()
+  console.log("TimeLockAdvisor3 deployed to: ", timeLockAdvisor3.address);
+  console.log("TimeLockAdvisor approving...........");
+  await fanArtInstance.approve(timeLockAdvisor3.address, await timeLockAdvisor3.initialTokensBalance())
+  console.log("timeLockAdvisor3 initStage...........");
+  await timeLockAdvisor3.initStage()
+
   //===== DEPLOY CoreTeam
   console.log("Deploying CoreTeam..............")
   const coreTeamAddress = "0xd066bCa4d1A6d30aBcaB49A7d51f9FB50bB3051D"
@@ -53,17 +74,6 @@ module.exports = async (deployer) => {
   await fanArtInstance.approve(timeLockMarketing.address, await timeLockMarketing.initialTokensBalance())
   console.log("TimeLockMarketing initStage...........");
   await timeLockMarketing.initStage()
-
-  //===== DEPLOY TimeLockPrivateSell
-  console.log("Deploying TimeLockPrivateSell..............")
-  const privateSellAddress = "0x2Bb55883A3671cb1954F1dea6F77f99b95B3297A"
-  await deployer.deploy(TimeLockPrivateSell, privateSellAddress, fanArtAddress);
-  const timeLockPrivateSell = await TimeLockPrivateSell.deployed()
-  console.log("TimeLockPrivateSell deployed to: ", timeLockPrivateSell.address);
-  console.log("TimeLockPrivateSell approving...........");
-  await fanArtInstance.approve(timeLockPrivateSell.address, await timeLockPrivateSell.initialTokensBalance())
-  console.log("TimeLockPrivateSell initStage...........");
-  await timeLockPrivateSell.initStage()
 
   //===== DEPLOY SellBuy
   console.log("Deploying SellBuy..............")

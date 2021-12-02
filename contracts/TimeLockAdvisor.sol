@@ -17,9 +17,9 @@ contract TimeLockAdvisor {
     uint256 releaseTime;
   }
 
-  uint256 withdrawedAmount;
+  uint256 sentAmount;
   uint256 constant DECIMALS = 10 ** 18;
-  uint256 constant public initialTokensBalance = 6000000 * DECIMALS;
+  uint256 constant public initialTokensBalance = 2750000 * DECIMALS;
 
   Stage[] public stages;
 
@@ -43,29 +43,19 @@ contract TimeLockAdvisor {
 
   function initStage() public onlyOwner {
     token.transferFrom(msg.sender, address(this), initialTokensBalance);
-    // Day 0: 2,000,000
+    // Day 0: 1,000,000
     // 1/12/2021
-    stages.push(Stage(2000000 * DECIMALS, 1638316800));
-    // after 6 month: 1,000,000
+    stages.push(Stage(1000000 * DECIMALS, 1638316800));
+    // after 6 month: 800,000
     // 1/6/2022
-    stages.push(Stage(1000000 * DECIMALS, 1654041600));
+    stages.push(Stage(950000 * DECIMALS, 1654041600));
 
-    // year 2~3: 600,000 each 6 months
+    // year 2: 400,000 each 6 months
     // 1/1/2023 - 1/6/2023
-    // 1/1/2024 - 1/6/2024
     {
-      uint32[4] memory times = [1672531200, 1685577600, 1704067200, 1717200000];
-      for (uint256 i = 0; i < 4; i++) {
-        stages.push(Stage(600000 * DECIMALS, times[i]));
-      }
-    }
-
-    // year 4: 300,000 each 6 months
-    // 1/1/2025 - 1/6/2025
-    {
-      uint32[2] memory times = [1735689600, 1748736000];
+      uint32[2] memory times = [1672531200, 1685577600];
       for (uint256 i = 0; i < 2; i++) {
-        stages.push(Stage(300000 * DECIMALS, times[i]));
+        stages.push(Stage(400000 * DECIMALS, times[i]));
       }
     }
   }
@@ -83,11 +73,11 @@ contract TimeLockAdvisor {
       }
     }
 
-    return availableAmount.sub(withdrawedAmount);
+    return availableAmount.sub(sentAmount);
   }
 
   function sendToken(uint256 _amount) internal {
-    withdrawedAmount = withdrawedAmount.add(_amount);
+    sentAmount = sentAmount.add(_amount);
     token.transfer(beneficiary, _amount);
 
     // emit event
