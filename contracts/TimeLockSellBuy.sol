@@ -16,7 +16,7 @@ contract TimeLockSellBuy {
     uint256 releaseTime;
   }
 
-  uint256 sentAmount;
+  uint256 public sentAmount;
   uint256 constant DECIMALS = 10 ** 18;
   uint256 constant public initialTokensBalance = 50000000 * DECIMALS;
 
